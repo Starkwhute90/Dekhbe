@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Tingu Ladki Animation 🎀</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000; /* Black background for contrast */
+            font-family: 'Arial', sans-serif;
+        }
+        .text {
+            position: absolute;
+            font-size: 3em;
+            font-weight: bold;
+            color: #ffb6c1; /* Light pink */
+            animation: float 10s ease-in-out infinite, colorChange 5s linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+            100% { transform: translate(0, 0); }
+        }
+        @keyframes colorChange {
+            0% { color: #ffb6c1; }
+            50% { color: #ffff00; } /* Yellow */
+            100% { color: #8a2be2; } /* Purple */
+        }
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div class="text" id="text1">tu sathiya gayi hai</div>
+        <div class="text" id="text2">tingu ladki 🎀</div>
+    </div>
+
+    <script>
+        // Get the text elements
+        const text1 = document.getElementById('text1');
+        const text2 = document.getElementById('text2');
+        const container = document.getElementById('container');
+
+        // Set initial random positions
+        function setRandomPosition(el) {
+            el.style.top = Math.random() * (window.innerHeight - el.offsetHeight) + 'px';
+            el.style.left = Math.random() * (window.innerWidth - el.offsetWidth) + 'px';
+        }
+
+        setRandomPosition(text1);
+        setRandomPosition(text2);
+
+        // Define velocities for both texts
+        let velocity1 = { x: 2, y: 2 };
+        let velocity2 = { x: -2, y: -2 };
+
+        // Animation loop
+        function animateText() {
+            moveText(text1, velocity1);
+            moveText(text2, velocity2);
+            checkCollision(text1, text2);
+
+            requestAnimationFrame(animateText);
+        }
+
+        function moveText(text, velocity) {
+            let rect = text.getBoundingClientRect();
+            if (rect.left <= 0 || rect.right >= window.innerWidth) velocity.x *= -1;
+            if (rect.top <= 0 || rect.bottom >= window.innerHeight) velocity.y *= -1;
+            text.style.left = rect.left + velocity.x + 'px';
+            text.style.top = rect.top + velocity.y + 'px';
+        }
+
+        // Collision detection
+        function checkCollision(text1, text2) {
+            let rect1 = text1.getBoundingClientRect();
+            let rect2 = text2.getBoundingClientRect();
+
+            if (!(rect1.right < rect2.left || 
+                  rect1.left > rect2.right || 
+                  rect1.bottom < rect2.top || 
+                  rect1.top > rect2.bottom)) {
+                // Reverse directions on collision
+                velocity1.x *= -1;
+                velocity1.y *= -1;
+                velocity2.x *= -1;
+                velocity2.y *= -1;
+            }
+        }
+
+        // Start the animation
+        animateText();
+
+        // Make text follow mouse for fun interactivity
+        container.addEventListener('mousemove', (event) => {
+            text1.style.transition = 'transform 0.2s ease-out';
+            text1.style.transform = `translate(${event.clientX / 20}px, ${event.clientY / 20}px)`;
+        });
+    </script>
+</body>
+</html>
